@@ -4,6 +4,7 @@ const exec = require('@actions/exec');
 const main = async () => {
     try {
         let args = [];
+        args.push('upload-quest-build');
 
         const appId = core.getInput('appId');
 

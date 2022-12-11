@@ -4114,6 +4114,7 @@ const exec = __nccwpck_require__(514);
 const main = async () => {
     try {
         let args = [];
+        args.push('upload-quest-build');
 
         const appId = core.getInput('appId');
 
