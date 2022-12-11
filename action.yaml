@@ -1,0 +1,45 @@
+name: 'Upload Meta Quest Build'
+description: 'A GitHub action for uploading a Meta Quest app to the Meta Quest store.'
+
+inputs:
+  appId:
+    description: 'Required. Specifies the ID of your app. Obtained from the API tab of your app in the Oculus Dashboard.'
+    required: true
+  appSecret:
+    description: 'Either app secret or user token required. Specifies the app secret. Obtained from the API tab of your app in the Oculus developer dashboard.'
+    required: false
+  token:
+    description: 'Either app secret or user token required. A user token obtained by the get-access-token command or from the API tab of your app in the Oculus developer dashboard.'
+    required: false
+  apkPath:
+    description: 'Required. Specifies the path to the APK file to upload.'
+    required: true
+  assetsDir:
+    description: 'Optional Specifies the path to the directory with DLCs for this build.'
+    required: false
+  assetFilesConfig:
+    description: 'Optional. Specifies the path to the file that configures required assets or associates DLC assets with in-app purchases.'
+    required: false
+  obbPath:
+    description: 'Optional. Specifies the path to the Expansion file (OBB) to upload.'
+    required: false
+  releaseChannel:
+    description: 'Defaults to ALPHA. Specifies the release channel for uploading the build. Use store for the "Production (AppLab)" or "Production (Store)" channels. Release channel names are not case-sensitive.'
+    required: false
+    default: 'ALPHA'
+  releaseNotes:
+    description: 'Optional. Specifies the release note text shown to users. Enclose the text in quotation marks. Encodes double quotes as \". Encode newlines as \n.'
+    required: false
+  languagePacksDir:
+    description: 'Optional. The path to the directory that contains language packs.'
+    required: false
+  debugSymbolsDir:
+    description: 'Optional. The path to the directory that contains debug symbol files.'
+    required: false
+  debugSymbolsPattern:
+    description: 'Optional. A pattern sequence that can match the filenames of all the debug symbol files. An asterisk may be used to indicate a wildcard, for example, *.sym.so.'
+    required: false
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
