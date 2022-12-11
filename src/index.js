@@ -37,20 +37,20 @@ const main = async () => {
         }
 
         args.push('--apk');
-        args.push(apkPath);
+        args.push(`'${apkPath}'`);
 
         const obbPath = core.getInput('obbPath');
 
         if (obbPath) {
             args.push('--obb');
-            args.push(obbPath);
+            args.push(`'${obbPath}'`);
         }
 
         const assetsDir = core.getInput('assetsDir');
 
         if (assetsDir) {
             args.push('--assets-dir');
-            args.push(assetsDir);
+            args.push(`'${assetsDir}'`);
         }
 
         const channel = core.getInput('releaseChannel') || 'ALPHA';
@@ -92,8 +92,6 @@ const main = async () => {
             args.push('--debug-symbols-pattern');
             args.push(debugSymbolsPattern);
         }
-
-        core.info(`ovr-platform-util ${args}`);
 
         await exec.exec('ovr-platform-util', args);
     } catch (error) {
