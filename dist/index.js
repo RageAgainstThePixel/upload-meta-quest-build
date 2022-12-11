@@ -4203,6 +4203,8 @@ const main = async () => {
             args.push(debugSymbolsPattern);
         }
 
+        core.info(`ovr-platform-util ${args}`);
+
         await exec.exec('ovr-platform-util', args);
     } catch (error) {
         core.setFailed(error);
