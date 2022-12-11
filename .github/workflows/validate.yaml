@@ -31,6 +31,6 @@ jobs:
       - name: RageAgainstThePixel/upload-meta-quest-build
         uses: ./
         with:
-          appId: secrets.APP_ID
-          appSecret: secrets.APP_SECRET
+          appId: ${{ secrets.APP_ID }}
+          appSecret: ${{ secrets.APP_SECRET }}
           apkPath: 'path/to/apk'
