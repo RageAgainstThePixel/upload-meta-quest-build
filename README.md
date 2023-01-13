@@ -19,3 +19,21 @@ steps:
       appSecret: ${{ secrets.APP_SECRET }}
       apkPath: 'path/to/apk'
 ```
+
+### All Parameters 
+[Oculus Platform Utility docs](https://developer.oculus.com/resources/publish-reference-platform-command-line-utility/)
+
+| Name | Description | Default | Required |
+| ---- | ----------- | ------- |---------|
+| appId | Your App ID from the meta store | "" | Yes |
+| appSecret | Your App secret from the meta store | "" | Must provide appSecret or token |
+| token | The App ID from the meta store | "" | Must provide appSecret or token |
+| apkPath | Path to the APK to upload | "" | Yes |
+| obbPath | Path to an obb file to upload | "" | No |
+| assetsDir | DLC Content to upload | "" | No |
+| releaseChannel | Which release channel to upload the apk to | "ALPHA" | No |
+| releaseNotes | Release notes to upload | "" | No |
+| assetFilesConfig | DLC Config | "" | No |
+| languagePacksDir | Additional languages | "" | No |
+| debugSymbolsDir | Path to the folder that contains the debug symbol file(s) | "" | No |
+| debugSymbolsPattern | Specifies a file pattern that matches the filesnames of all debug symbol files | "" | No |
