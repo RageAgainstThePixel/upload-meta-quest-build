@@ -6,6 +6,15 @@ const main = async () => {
         let args = [];
         args.push('upload-quest-build');
 
+        const ageGroup = core.getInput('ageGroup');
+
+        if (!ageGroup) {
+            throw Error('Missing ageGroup input. Must be one of: TEENS_AND_ADULTS, MIXED_AGES, or CHILDREN.');
+        }
+
+        args.push('--age_group');
+        args.push(ageGroup);
+
         const appId = core.getInput('appId');
 
         if (!appId) {

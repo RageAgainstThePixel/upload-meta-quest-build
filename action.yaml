@@ -2,6 +2,9 @@ name: 'Upload Meta Quest Build'
 description: 'A GitHub action for uploading a Meta Quest app to the Meta Quest store.'
 
 inputs:
+  ageGroup:
+    description: 'Required. (If not specified, the upload will go into “draft” status, rather than failing.) Age group of the build. This can be TEENS_AND_ADULTS, MIXED_AGES, or CHILDREN. For more information, see Age Group Self-Certification and Youth Requirements.'
+    required: true
   appId:
     description: 'Required. Specifies the ID of your app. Obtained from the API tab of your app in the Oculus Dashboard.'
     required: true

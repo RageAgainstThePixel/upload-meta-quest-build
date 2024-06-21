@@ -11,9 +11,9 @@ A GitHub action for [uploading a Meta Quest app to the Meta Quest store](https:/
 
 ```yaml
 steps:
-  - uses: RageAgainstThePixel/setup-ovr-platform-util@v1.1
+  - uses: RageAgainstThePixel/setup-ovr-platform-util@v1
 
-  - uses: RageAgainstThePixel/upload-meta-quest-build@v1.1
+  - uses: RageAgainstThePixel/upload-meta-quest-build@v2
     with:
       appId: ${{ secrets.APP_ID }}
       appSecret: ${{ secrets.APP_SECRET }}
@@ -26,6 +26,7 @@ steps:
 
 | Name | Description | Default | Required |
 | ---- | ----------- | ------- |---------|
+| ageGroup | Age group of the build. This can be TEENS_AND_ADULTS, MIXED_AGES, or CHILDREN. | "" | Yes |
 | appId | Your App ID from the meta store | "" | Yes |
 | appSecret | Your App secret from the meta store | "" | Must provide appSecret or token |
 | token | The App ID from the meta store | "" | Must provide appSecret or token |
