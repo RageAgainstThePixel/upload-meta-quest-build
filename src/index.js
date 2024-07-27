@@ -103,18 +103,25 @@ const main = async () => {
             args.push(debugSymbolsPattern);
         }
 
-        [exitCode, output] = await exec.getExecOutput('ovr-platform-util', args);
+        let output = '';
+        await exec.exec('ovr-platform-util', args, {
+            listeners: {
+                stdout: (data) => {
+                    output += data.toString();
+                },
+                stderr: (data) => {
+                    output += data.toString();
+                }
+            }
+        });
 
-        if (exitCode !== 0) {
-            throw Error(output);
-        }
-
-        const match = output.match(/Build ID: (\d+)/);
+        const match = output.match(/Created Build ID: (?<build_id>\d+)/);
         if (match) {
-            const buildId = match[1];
+            const build_id = match.groups.build_id;
 
-            if (buildId) {
-                core.setOutput('buildId', buildId);
+            if (build_id) {
+                core.debug(`build_id: ${build_id}`);
+                core.setOutput('build_id', build_id);
             }
         }
     } catch (error) {
