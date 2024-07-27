@@ -103,7 +103,27 @@ const main = async () => {
             args.push(debugSymbolsPattern);
         }
 
-        await exec.exec('ovr-platform-util', args);
+        let output = '';
+        await exec.exec('ovr-platform-util', args, {
+            listeners: {
+                stdout: (data) => {
+                    output += data.toString();
+                },
+                stderr: (data) => {
+                    output += data.toString();
+                }
+            }
+        });
+
+        const match = output.match(/Created Build ID: (?<build_id>\d+)/);
+        if (match) {
+            const build_id = match.groups.build_id;
+
+            if (build_id) {
+                core.debug(`build_id: ${build_id}`);
+                core.setOutput('build_id', build_id);
+            }
+        }
     } catch (error) {
         core.setFailed(error);
     }
