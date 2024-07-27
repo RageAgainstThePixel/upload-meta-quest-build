@@ -9,9 +9,11 @@ A GitHub action for [uploading a Meta Quest app to the Meta Quest store](https:/
   * `APP_ID`
   * `APP_SECRET`
 
-Step outputs:
+### outputs
 
 * `buildId`: The uploaded build id.
+
+### workflow
 
 ```yaml
 steps:
