@@ -28162,8 +28162,14 @@ const main = async () => {
             throw Error(output);
         }
 
-        const buildId = output.match(/Build ID: (\d+)/)[1];
-        core.setOutput('buildId', buildId);
+        const match = output.match(/Build ID: (\d+)/);
+        if (match) {
+            const buildId = match[1];
+
+            if (buildId) {
+                core.setOutput('buildId', buildId);
+            }
+        }
     } catch (error) {
         core.setFailed(error);
     }
