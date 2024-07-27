@@ -103,7 +103,14 @@ const main = async () => {
             args.push(debugSymbolsPattern);
         }
 
-        await exec.exec('ovr-platform-util', args);
+        [exitCode, output] = await exec.getExecOutput('ovr-platform-util', args);
+
+        if (exitCode !== 0) {
+            throw Error(output);
+        }
+
+        const buildId = output.match(/Build ID: (\d+)/)[1];
+        core.setOutput('buildId', buildId);
     } catch (error) {
         core.setFailed(error);
     }
