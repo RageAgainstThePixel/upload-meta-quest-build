@@ -11,7 +11,7 @@ A GitHub action for [uploading a Meta Quest app to the Meta Quest store](https:/
 
 ### outputs
 
-* `buildId`: The uploaded build id.
+* `build_id`: The uploaded build id.
 
 ### workflow
 
@@ -27,7 +27,7 @@ steps:
       appSecret: ${{ secrets.APP_SECRET }}
       apkPath: 'path/to/apk'
     # use uploaded meta quest build id
-  - run: 'echo ${{ steps.upload.buildId }}'
+  - run: 'echo ${{ steps.upload.build_id }}'
 ```
 
 ### All Parameters
