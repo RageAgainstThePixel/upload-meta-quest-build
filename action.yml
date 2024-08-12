@@ -1,6 +1,8 @@
 name: 'Upload Meta Quest Build'
 description: 'A GitHub action for uploading a Meta Quest app to the Meta Quest store.'
-
+branding:
+  icon: upload-cloud
+  color: blue
 inputs:
   ageGroup:
     description: 'Required. (If not specified, the upload will go into “draft” status, rather than failing.) Age group of the build. This can be TEENS_AND_ADULTS, MIXED_AGES, or CHILDREN. For more information, see Age Group Self-Certification and Youth Requirements.'
@@ -42,7 +44,9 @@ inputs:
   debugSymbolsPattern:
     description: 'Optional. A pattern sequence that can match the filenames of all the debug symbol files. An asterisk may be used to indicate a wildcard, for example, *.sym.so.'
     required: false
-
+outputs:
+  build_id:
+    description: 'The ID of the build that was uploaded.'
 runs:
   using: 'node20'
   main: 'dist/index.js'
