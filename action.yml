@@ -42,7 +42,9 @@ inputs:
   debugSymbolsPattern:
     description: 'Optional. A pattern sequence that can match the filenames of all the debug symbol files. An asterisk may be used to indicate a wildcard, for example, *.sym.so.'
     required: false
-
+outputs:
+  build_id:
+    description: 'The ID of the build that was uploaded.'
 runs:
   using: 'node20'
   main: 'dist/index.js'

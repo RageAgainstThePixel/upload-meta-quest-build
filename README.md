@@ -1,17 +1,13 @@
 # upload-meta-quest-build
 
-A GitHub action for [uploading a Meta Quest app to the Meta Quest store](https://developer.oculus.com/resources/publish-reference-platform-command-line-utility/#upload-quest).
+A GitHub Action for [uploading a Meta Quest app to the Meta Quest store](https://developer.oculus.com/resources/publish-reference-platform-command-line-utility/#upload-quest).
 
 ## How to use
 
 * [Get Credentials](https://developer.oculus.com/resources/publish-reference-platform-command-line-utility/#credentials)
 * Set repo secrets
-  * `APP_ID`
-  * `APP_SECRET`
-
-### outputs
-
-* `build_id`: The uploaded build id.
+  * `META_APP_ID`
+  * `META_APP_SECRET`
 
 ### workflow
 
@@ -23,14 +19,14 @@ steps:
   - uses: RageAgainstThePixel/upload-meta-quest-build@v2
     id: upload
     with:
-      appId: ${{ secrets.APP_ID }}
-      appSecret: ${{ secrets.APP_SECRET }}
+      appId: ${{ secrets.META_APP_ID }}
+      appSecret: ${{ secrets.META_APP_SECRET }}
       apkPath: 'path/to/apk'
     # use uploaded meta quest build id
   - run: 'echo ${{ steps.upload.build_id }}'
 ```
 
-### All Parameters
+### inputs
 
 [Oculus Platform Utility docs](https://developer.oculus.com/resources/publish-reference-platform-command-line-utility/)
 
@@ -49,6 +45,10 @@ steps:
 | `languagePacksDir` | Additional languages | | No |
 | `debugSymbolsDir` | Path to the folder that contains the debug symbol file(s) | | No |
 | `debugSymbolsPattern` | Specifies a file pattern that matches the files names of all debug symbol files | | No |
+
+### outputs
+
+* `build_id`: The uploaded build id.
 
 ## Related actions
 
