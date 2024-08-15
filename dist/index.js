@@ -32862,6 +32862,7 @@ const unzip = __nccwpck_require__(9340);
 const path = __nccwpck_require__(1017);
 const main = async () => {
     try {
+        core.info(`Running ovr-platform-util upload-quest-build...`);
         const args = [`upload-quest-build`];
         const ageGroup = core.getInput(`ageGroup`);
         if (!ageGroup) {
@@ -32882,6 +32883,7 @@ const main = async () => {
             args.push(`--app_secret`, appSecret);
         }
         const buildDir = core.getInput(`buildDir`);
+        core.info(`buildDir: ${buildDir}`);
         const apkPath = buildDir
             ? await findSpecificPath(`${buildDir}/**/*.apk`)
             : await findSpecificPath(core.getInput(`apkPath`));
@@ -32914,6 +32916,7 @@ const main = async () => {
             args.push(`--language-packs-dir`, languagePacksDir);
         }
         const debugSymbolsZip = await findSpecificPath(core.getInput(`debugSymbolsZip`));
+        core.info(`debugSymbolsZip: ${debugSymbolsZip}`);
         const debugSymbolsDir = debugSymbolsZip
             ? await unzipSymbols(debugSymbolsZip)
             : await findSpecificPath(core.getInput(`debugSymbolsDir`));
@@ -32953,31 +32956,44 @@ async function execOvrUtil(args) {
     return output;
 }
 async function findGlobMatches(pattern) {
+    core.info(`Finding paths matching pattern: ${pattern}`);
     if (!pattern) {
         return [];
     }
     const globber = await glob.create(pattern);
-    return await globber.glob();
+    var paths = await globber.glob();
+    core.info(`Found ${paths.length} paths matching pattern: ${pattern}`);
+    return paths;
 }
 async function findSpecificPath(pattern) {
+    core.info(`Finding path matching pattern: ${pattern}`);
     if (!pattern) {
         return undefined;
     }
     const paths = await findGlobMatches(pattern);
     if (paths.length === 0) {
+        core.info(`No paths found matching pattern: ${pattern}`);
         return undefined;
     }
     else if (paths.length > 1) {
         core.warning(`Found more than one path matching pattern: ${pattern}\n  > ${paths.join(`\n  > `)}`);
     }
-    return paths[0] !== undefined ? paths[0] : undefined;
+    const result = paths[0] !== undefined ? paths[0] : undefined;
+    core.info(`Found path: ${result}`);
+    return result;
 }
 const unzipSymbols = async (symbolsZip) => {
-    const outputDir = `${process.env.RUNNER_TEMP}/${path.basename(symbolsZip, '.zip')}`;
+    const outputDir = path.join(`${process.env.RUNNER_TEMP}`, `${path.basename(symbolsZip, '.zip')}`);
+    core.info(`Unzipping symbols to: ${outputDir}`);
     return await new Promise((resolve, reject) => {
-        unzip.Extract({ path: outputDir })
-            .on('close', () => resolve(outputDir))
-            .on('error', reject);
+        try {
+            unzip.Extract({ path: outputDir })
+                .on('close', () => resolve(outputDir))
+                .on('error', reject);
+        }
+        catch (error) {
+            reject(error);
+        }
     });
 };
 main();
