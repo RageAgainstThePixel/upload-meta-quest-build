@@ -3,6 +3,7 @@ import exec = require('@actions/exec');
 import glob = require('@actions/glob');
 import unzip = require('unzip-stream');
 import path = require('path');
+import fs = require('fs');
 
 const main = async () => {
     try {
@@ -152,13 +153,15 @@ const unzipSymbols = async (symbolsZip: string): Promise<string> => {
     core.info(`Unzipping symbols:\n"${symbolsZip}"\n"${outputDir}"`);
     try {
         return await new Promise<string>((resolve, reject) => {
-            try {
-                unzip.Extract({ path: outputDir })
-                    .on('close', () => resolve(outputDir))
-                    .on('error', reject);
-            } catch (error) {
+            const extractStream = unzip.Extract({ path: outputDir });
+            extractStream.on('close', () => {
+                core.info(`Successfully unzipped symbols to: ${outputDir}`);
+                resolve(outputDir);
+            });
+            extractStream.on('error', (error) => {
                 reject(error);
-            }
+            });
+            fs.createReadStream(symbolsZip).pipe(extractStream);
         });
     } catch (error) {
         throw Error(`Failed to unzip symbols: ${error}`);

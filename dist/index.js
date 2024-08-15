@@ -32860,6 +32860,7 @@ const exec = __nccwpck_require__(1514);
 const glob = __nccwpck_require__(8090);
 const unzip = __nccwpck_require__(9340);
 const path = __nccwpck_require__(1017);
+const fs = __nccwpck_require__(7147);
 const main = async () => {
     try {
         core.info(`Running ovr-platform-util upload-quest-build...`);
@@ -33012,14 +33013,15 @@ const unzipSymbols = async (symbolsZip) => {
     core.info(`Unzipping symbols:\n"${symbolsZip}"\n"${outputDir}"`);
     try {
         return await new Promise((resolve, reject) => {
-            try {
-                unzip.Extract({ path: outputDir })
-                    .on('close', () => resolve(outputDir))
-                    .on('error', reject);
-            }
-            catch (error) {
+            const extractStream = unzip.Extract({ path: outputDir });
+            extractStream.on('close', () => {
+                core.info(`Successfully unzipped symbols to: ${outputDir}`);
+                resolve(outputDir);
+            });
+            extractStream.on('error', (error) => {
                 reject(error);
-            }
+            });
+            fs.createReadStream(symbolsZip).pipe(extractStream);
         });
     }
     catch (error) {
