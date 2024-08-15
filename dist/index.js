@@ -32868,8 +32868,10 @@ const main = async () => {
         if (!ageGroup) {
             throw Error('Missing ageGroup input. Must be one of: TEENS_AND_ADULTS, MIXED_AGES, or CHILDREN.');
         }
+        core.info(`ageGroup: ${ageGroup}`);
         args.push(`--age_group`, ageGroup);
         const appId = core.getInput(`appId`, { required: true });
+        core.info(`appId: ${appId}`);
         args.push(`--app_id`, appId);
         const appSecret = core.getInput(`appSecret`);
         if (!appSecret) {
@@ -32883,48 +32885,68 @@ const main = async () => {
             args.push(`--app_secret`, appSecret);
         }
         const buildDir = core.getInput(`buildDir`);
-        core.info(`buildDir: ${buildDir}`);
+        if (buildDir) {
+            core.info(`buildDir: ${buildDir}`);
+        }
         const apkPath = buildDir
             ? await findSpecificPath(`${buildDir}/**/*.apk`)
             : await findSpecificPath(core.getInput(`apkPath`));
         if (!apkPath) {
             throw Error(`Missing apkPath input`);
         }
+        core.info(`apkPath: ${apkPath}`);
         args.push(`--apk`, `'${apkPath}'`);
         const obbPath = buildDir
             ? await findSpecificPath(`${buildDir}/**/*.obb`)
             : await findSpecificPath(core.getInput(`obbPath`));
         if (obbPath) {
+            core.info(`obbPath: ${obbPath}`);
             args.push(`--obb`, `'${obbPath}'`);
         }
         const assetsDir = core.getInput(`assetsDir`);
         if (assetsDir) {
+            core.info(`assetsDir: ${assetsDir}`);
             args.push(`--assets-dir`, `'${assetsDir}'`);
         }
         const channel = core.getInput(`releaseChannel`) || `ALPHA`;
+        core.info(`releaseChannel: ${channel}`);
         args.push(`--channel`, channel);
         const releaseNotes = core.getInput(`releaseNotes`);
         if (releaseNotes) {
+            core.info(`releaseNotes:\n-----\n${releaseNotes}\n-----`);
             args.push(`--notes`, `"${releaseNotes}"`);
         }
         const assetFilesConfig = await findSpecificPath(core.getInput(`assetFilesConfig`));
         if (assetFilesConfig) {
+            core.info(`assetFilesConfig: ${assetFilesConfig}`);
             args.push(`--asset-files-config`, assetFilesConfig);
         }
         const languagePacksDir = await findSpecificPath(core.getInput(`languagePacksDir`));
         if (languagePacksDir) {
+            core.info(`languagePacksDir: ${languagePacksDir}`);
             args.push(`--language-packs-dir`, languagePacksDir);
         }
-        const debugSymbolsZip = await findSpecificPath(core.getInput(`debugSymbolsZip`));
-        core.info(`debugSymbolsZip: ${debugSymbolsZip}`);
+        const debugSymbolsZip = await findSpecificPath(buildDir
+            ? `${buildDir}/**/*.zip`
+            : core.getInput(`debugSymbolsZip`));
+        if (buildDir) {
+            if (!debugSymbolsZip) {
+                core.warning(`No debugSymbolsZip found in buildDir: ${buildDir}`);
+            }
+            else {
+                core.info(`debugSymbolsZip: ${debugSymbolsZip}`);
+            }
+        }
         const debugSymbolsDir = debugSymbolsZip
             ? await unzipSymbols(debugSymbolsZip)
             : await findSpecificPath(core.getInput(`debugSymbolsDir`));
         if (debugSymbolsDir) {
+            core.info(`debugSymbolsDir: ${debugSymbolsDir}`);
             args.push(`--debug_symbols_dir`, debugSymbolsDir);
         }
         const debugSymbolsPattern = core.getInput(`debugSymbolsPattern`);
         if (debugSymbolsPattern) {
+            core.info(`debugSymbolsPattern: ${debugSymbolsPattern}`);
             args.push(`--debug-symbols-pattern`, debugSymbolsPattern);
         }
         const output = await execOvrUtil(args);
@@ -32932,7 +32954,7 @@ const main = async () => {
         if (match) {
             const build_id = match.groups.build_id;
             if (build_id) {
-                core.debug(`build_id: ${build_id}`);
+                core.info(`build_id: ${build_id}`);
                 core.setOutput('build_id', build_id);
             }
         }
@@ -32943,7 +32965,7 @@ const main = async () => {
 };
 async function execOvrUtil(args) {
     let output = '';
-    await exec.exec('ovr-platform-util', args, {
+    const exitCode = await exec.exec('ovr-platform-util', args, {
         listeners: {
             stdout: (data) => {
                 output += data.toString();
@@ -32953,23 +32975,26 @@ async function execOvrUtil(args) {
             }
         }
     });
+    if (exitCode !== 0) {
+        throw Error(`ovr-platform-util failed with exit code: ${exitCode}`);
+    }
     return output;
 }
 async function findGlobMatches(pattern) {
-    core.info(`Finding paths matching pattern: ${pattern}`);
     if (!pattern) {
         return [];
     }
+    core.info(`Finding paths matching pattern: ${pattern}`);
     const globber = await glob.create(pattern);
     var paths = await globber.glob();
     core.info(`Found ${paths.length} paths matching pattern: ${pattern}`);
     return paths;
 }
 async function findSpecificPath(pattern) {
-    core.info(`Finding path matching pattern: ${pattern}`);
     if (!pattern) {
         return undefined;
     }
+    core.info(`Finding path matching pattern: ${pattern}`);
     const paths = await findGlobMatches(pattern);
     if (paths.length === 0) {
         core.info(`No paths found matching pattern: ${pattern}`);
@@ -32984,17 +33009,22 @@ async function findSpecificPath(pattern) {
 }
 const unzipSymbols = async (symbolsZip) => {
     const outputDir = path.join(`${process.env.RUNNER_TEMP}`, `${path.basename(symbolsZip, '.zip')}`);
-    core.info(`Unzipping symbols to: ${outputDir}`);
-    return await new Promise((resolve, reject) => {
-        try {
-            unzip.Extract({ path: outputDir })
-                .on('close', () => resolve(outputDir))
-                .on('error', reject);
-        }
-        catch (error) {
-            reject(error);
-        }
-    });
+    core.info(`Unzipping symbols:\n"${symbolsZip}"\n"${outputDir}"`);
+    try {
+        return await new Promise((resolve, reject) => {
+            try {
+                unzip.Extract({ path: outputDir })
+                    .on('close', () => resolve(outputDir))
+                    .on('error', reject);
+            }
+            catch (error) {
+                reject(error);
+            }
+        });
+    }
+    catch (error) {
+        throw Error(`Failed to unzip symbols: ${error}`);
+    }
 };
 main();
 
