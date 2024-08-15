@@ -41,7 +41,7 @@ steps:
 | `buildDir` | Specifies the path to the directory that contains the build files. If specified, the plugin will look for the APK and OBB files in this directory. | false | |
 | `assetsDir` | Specifies the path to the directory with DLCs for this build. | false | |
 | `assetFilesConfig` | Specifies the path to the file that configures required assets or associates DLC assets with in-app purchases. | false | |
-| `releaseChannel` | Which release channel to upload the apk to | false | `ALPHA` |
+| `releaseChannel` | Specifies the release channel for uploading the build. Release channel names are ***not*** case-sensitive. | false | `ALPHA` |
 | `releaseNotes` | Specifies the release note text shown to users. Encodes double quotes as `\"`. Encode newlines as `\n`. | false | |
 | `languagePacksDir` | The path to the directory that contains language packs. | false | |
 | `debugSymbolsDir` | Path to the folder that contains the debug symbol file(s). | false | |
