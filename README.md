@@ -21,7 +21,7 @@ steps:
     with:
       appId: ${{ secrets.META_APP_ID }}
       appSecret: ${{ secrets.META_APP_SECRET }}
-      apkPath: 'path/to/apk'
+      buildDir: 'path/to/build/folder'
     # use uploaded meta quest build id
   - run: 'echo ${{ steps.upload.build_id }}'
 ```
