@@ -13,10 +13,10 @@ const main = async () => {
             throw Error('Missing ageGroup input. Must be one of: TEENS_AND_ADULTS, MIXED_AGES, or CHILDREN.');
         }
         core.debug(`ageGroup: ${ageGroup}`);
-        args.push(`--age_group`, ageGroup);
+        args.push(`--age-group`, ageGroup);
         const appId = core.getInput(`appId`, { required: true });
         core.debug(`appId: ${appId}`);
-        args.push(`--app_id`, appId);
+        args.push(`--app-id`, appId);
         const appSecret = core.getInput(`appSecret`);
         if (!appSecret) {
             const token = core.getInput(`token`);
@@ -25,7 +25,7 @@ const main = async () => {
             }
             args.push(`--token`, token);
         } else {
-            args.push(`--app_secret`, appSecret);
+            args.push(`--app-secret`, appSecret);
         }
         const buildDir = core.getInput(`buildDir`);
         if (buildDir) {
@@ -84,7 +84,7 @@ const main = async () => {
             : await findSpecificPath(core.getInput(`debugSymbolsDir`));
         if (debugSymbolsDir) {
             core.debug(`debugSymbolsDir: ${debugSymbolsDir}`);
-            args.push(`--debug_symbols_dir`, debugSymbolsDir);
+            args.push(`--debug-symbols-dir`, debugSymbolsDir);
         }
         const debugSymbolsPattern = core.getInput(`debugSymbolsPattern`);
         if (debugSymbolsPattern) {
