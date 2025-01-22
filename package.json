@@ -1,6 +1,6 @@
 {
   "name": "upload-meta-quest-build",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A GitHub Action for uploading a Meta Quest app to the Meta Quest store.",
   "author": "RageAgainstThePixel",
   "repository": {
