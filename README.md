@@ -41,12 +41,16 @@ steps:
 | `buildDir` | Specifies the path to the directory that contains the build files. If specified, the plugin will look for the APK and OBB files in this directory. | false | |
 | `assetsDir` | Specifies the path to the directory with DLCs for this build. | false | |
 | `assetFilesConfig` | Specifies the path to the file that configures required assets or associates DLC assets with in-app purchases. | false | |
+| `inheritAssetFiles` | Specifies whether to inherit asset files from the previous build. | false | |
 | `releaseChannel` | Specifies the release channel for uploading the build. Release channel names are ***not*** case-sensitive. | false | `ALPHA` |
 | `releaseNotes` | Specifies the release note text shown to users. Encodes double quotes as `\"`. Encode newlines as `\n`. | false | |
 | `languagePacksDir` | The path to the directory that contains language packs. | false | |
 | `debugSymbolsDir` | Path to the folder that contains the debug symbol file(s). | false | |
 | `debugSymbolsZip` | The path to the debug symbol zip file. If provided this will be used instead of the `debugSymbolsDir` and will unzip before uploading. | false | |
 | `debugSymbolsPattern` | A pattern sequence that can match the filenames of all the debug symbol files. An asterisk may be used to indicate a wildcard, for example, `*.sym.so`. | false | |
+| `excludeAddons` | Whether to exclude attaching global shared Add-ons to this build. | false | |
+| `draft` | Specifies whether to upload the build as a draft. | false | |
+| `force` | Forces the upload, even if there are validation errors. | false | |
 
 ### outputs
 

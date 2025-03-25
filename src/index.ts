@@ -69,15 +69,20 @@ const main = async () => {
             core.debug(`languagePacksDir: ${languagePacksDir}`);
             args.push(`--language-packs-dir`, languagePacksDir);
         }
-        const debugSymbolsZip = await findSpecificPath(buildDir
-            ? `${buildDir}/**/*.zip`
-            : core.getInput(`debugSymbolsZip`));
-        if (buildDir) {
+        let debugSymbolsZip: string | null = null;
+        const inputDebugSymbolsPath = core.getInput(`debugSymbolsZip`);
+        if (inputDebugSymbolsPath) {
+            debugSymbolsZip = await findSpecificPath(inputDebugSymbolsPath);
             if (!debugSymbolsZip) {
-                core.warning(`No debugSymbolsZip found in buildDir: ${buildDir}`);
-            } else {
-                core.debug(`debugSymbolsZip: ${debugSymbolsZip}`);
+                core.warning(`No debugSymbolsZip found in directory: ${inputDebugSymbolsPath}`);
             }
+        } else {
+            if (buildDir) {
+                debugSymbolsZip = await findSpecificPath(`${buildDir}/**/*.zip`);
+            }
+        }
+        if (debugSymbolsZip) {
+            core.debug(`debugSymbolsZip: ${debugSymbolsZip}`);
         }
         const debugSymbolsDir = debugSymbolsZip
             ? await unzipSymbols(debugSymbolsZip)
@@ -91,6 +96,27 @@ const main = async () => {
             core.debug(`debugSymbolsPattern: ${debugSymbolsPattern}`);
             args.push(`--debug-symbols-pattern`, debugSymbolsPattern);
         }
+        const inheritAssetFiles = core.getInput(`inheritAssetFiles`);
+        if (inheritAssetFiles) {
+            core.debug(`inheritAssetFiles: ${inheritAssetFiles}`);
+            args.push(`--inherit-asset-files`, inheritAssetFiles);
+        }
+        const excludeAddons = core.getInput(`excludeAddons`);
+        if (excludeAddons) {
+            core.debug(`excludeAddons: ${excludeAddons}`);
+            args.push(`--exclude-addons`, excludeAddons);
+        }
+        const draft = core.getInput(`draft`);
+        if (draft) {
+            core.debug(`draft: ${draft}`);
+            args.push(`--draft`, draft);
+        }
+        const force = core.getInput(`force`);
+        if (force === 'true') {
+            core.debug(`force: ${force}`);
+            args.push(`--force`);
+        }
+        args.push(`--disable-progress-bar`, `true`);
         const output = await execOvrUtil(args);
         const match = output.match(/Created Build ID: (?<build_id>\d+)/);
         if (match) {
@@ -132,17 +158,17 @@ async function findGlobMatches(pattern: string): Promise<string[]> {
     return paths;
 }
 
-async function findSpecificPath(pattern: string): Promise<string | undefined> {
-    if (!pattern) { return undefined; }
+async function findSpecificPath(pattern: string): Promise<string | null> {
+    if (!pattern) { return null; }
     core.debug(`Finding path matching pattern: ${pattern}`);
     const paths = await findGlobMatches(pattern);
     if (paths.length === 0) {
         core.debug(`No paths found matching pattern: ${pattern}`);
-        return undefined;
+        return null;
     } else if (paths.length > 1) {
         core.warning(`Found more than one path matching pattern: ${pattern}\n  > ${paths.join(`\n  > `)}`);
     }
-    const result = paths[0] !== undefined ? paths[0] : undefined;
+    const result = paths[0];
     core.debug(`Found path: ${result}`);
     return result;
 }
