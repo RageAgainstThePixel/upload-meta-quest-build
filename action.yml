@@ -66,5 +66,5 @@ outputs:
   build_id:
     description: 'The ID of the build that was uploaded.'
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
