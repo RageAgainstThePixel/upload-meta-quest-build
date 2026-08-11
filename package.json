@@ -1,6 +1,6 @@
 {
   "name": "upload-meta-quest-build",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "A GitHub Action for uploading a Meta Quest app to the Meta Quest store.",
   "author": "RageAgainstThePixel",
   "repository": {
@@ -27,7 +27,7 @@
     "unzip-stream": "^0.3.4"
   },
   "devDependencies": {
-    "@types/node": "^24.12.4",
+    "@types/node": "^24.13.3",
     "@types/unzip-stream": "^0.3.4",
     "@vercel/ncc": "^0.34.0",
     "shx": "^0.4.0",
