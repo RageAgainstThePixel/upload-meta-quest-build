@@ -1,6 +1,6 @@
 {
   "name": "upload-meta-quest-build",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "A GitHub Action for uploading a Meta Quest app to the Meta Quest store.",
   "author": "RageAgainstThePixel",
   "repository": {
@@ -20,25 +20,22 @@
   "license": "MIT",
   "main": "dist/index.js",
   "dependencies": {
-    "@actions/core": "^1.11.1",
-    "@actions/exec": "^1.1.1",
-    "@actions/glob": "^0.5.1",
-    "@actions/io": "^2.0.0",
+    "@actions/core": "^3.0.1",
+    "@actions/exec": "^3.0.0",
+    "@actions/glob": "^0.7.0",
+    "@actions/io": "^3.0.2",
     "unzip-stream": "^0.3.4"
   },
   "devDependencies": {
-    "@types/node": "^24.12.4",
+    "@types/node": "^24.19.2",
     "@types/unzip-stream": "^0.3.4",
-    "@vercel/ncc": "^0.34.0",
+    "@vercel/ncc": "^0.45.0",
     "shx": "^0.4.0",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "scripts": {
     "build": "npm run clean && npm run bundle",
     "bundle": "ncc build src/index.ts -o dist --source-map --license licenses.txt",
     "clean": "npm install && shx rm -rf dist/ out/ node_modules/ && npm ci"
-  },
-  "overrides": {
-    "@actions/http-client": "^3.0.2"
   }
 }
