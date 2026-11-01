@@ -14,16 +14,17 @@ A GitHub Action for [uploading a Meta Quest app to the Meta Quest store](https:/
 ```yaml
 steps:
     # setup ovr platform util
-  - uses: RageAgainstThePixel/setup-ovr-platform-util@v1
+  - uses: RageAgainstThePixel/setup-ovr-platform-util@v2
     # upload meta quest build
   - uses: RageAgainstThePixel/upload-meta-quest-build@v2
     id: upload
     with:
       appId: ${{ secrets.META_APP_ID }}
       appSecret: ${{ secrets.META_APP_SECRET }}
+      ageGroup: 'TEENS_AND_ADULTS'
       buildDir: 'path/to/build/folder'
     # use uploaded meta quest build id
-  - run: 'echo ${{ steps.upload.build_id }}'
+  - run: 'echo ${{ steps.upload.outputs.build_id }}'
 ```
 
 ### inputs
@@ -32,17 +33,17 @@ steps:
 
 | Name | Description | Required | Default |
 | ---- | ----------- | ------- |----------|
-| `ageGroup` | Age group of the build. This can be `TEENS_AND_ADULTS`, `MIXED_AGES`, or `CHILDREN`. (If not specified, the upload will go into “draft” status, rather than failing). For more information, see [Age Group Self-Certification and Youth Requirements](https://developer.oculus.com/resources/age-groups). | true | |
+| `ageGroup` | Age group of the build. This can be `TEENS_AND_ADULTS`, `MIXED_AGES`, or `CHILDREN`. The action fails when it is not set. For more information, see [Age Group Self-Certification and Youth Requirements](https://developer.oculus.com/resources/age-groups). | true | |
 | `appId` | Specifies the ID of your app. Obtained from the API tab of your app in the Oculus Dashboard. | true | |
 | `appSecret` |Specifies the app secret. Obtained from the API tab of your app in the Oculus developer dashboard. | Must provide `appSecret` or `token` | |
 | `token` | A user token obtained by the get-access-token command or from the API tab of your app in the Oculus developer dashboard. | Must provide `appSecret` or `token` | |
-| `apkPath` | Specifies the path to the APK to upload. | true | |
+| `apkPath` | Specifies the path to the APK to upload. | Must provide `apkPath` or `buildDir` | |
 | `obbPath` | Specifies the path to the Expansion file (OBB) to upload. | false | |
-| `buildDir` | Specifies the path to the directory that contains the build files. If specified, the plugin will look for the APK and OBB files in this directory. | false | |
+| `buildDir` | Specifies the path to the directory that contains the build files. If specified, the action uses the first `*.apk`, `*.obb` and, unless `debugSymbolsZip` is set, `*.zip` (as debug symbols) found in this directory. | Must provide `apkPath` or `buildDir` | |
 | `assetsDir` | Specifies the path to the directory with DLCs for this build. | false | |
 | `assetFilesConfig` | Specifies the path to the file that configures required assets or associates DLC assets with in-app purchases. | false | |
 | `inheritAssetFiles` | Specifies whether to inherit asset files from the previous build. | false | |
-| `releaseChannel` | Specifies the release channel for uploading the build. Release channel names are ***not*** case-sensitive. | false | `ALPHA` |
+| `releaseChannel` | Specifies the release channel for uploading the build. Use `store` for the "Production (AppLab)" or "Production (Store)" channels. Release channel names are ***not*** case-sensitive. | false | `ALPHA` |
 | `releaseNotes` | Specifies the release note text shown to users. Encodes double quotes as `\"`. Encode newlines as `\n`. | false | |
 | `languagePacksDir` | The path to the directory that contains language packs. | false | |
 | `debugSymbolsDir` | Path to the folder that contains the debug symbol file(s). | false | |
@@ -50,7 +51,7 @@ steps:
 | `debugSymbolsPattern` | A pattern sequence that can match the filenames of all the debug symbol files. An asterisk may be used to indicate a wildcard, for example, `*.sym.so`. | false | |
 | `excludeAddons` | Whether to exclude attaching global shared Add-ons to this build. | false | |
 | `draft` | Specifies whether to upload the build as a draft. | false | |
-| `force` | Forces the upload, even if there are validation errors. | false | |
+| `force` | Forces the upload, even if there are validation errors. Only applies when set to `true`. | false | |
 
 ### outputs
 
