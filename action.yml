@@ -5,7 +5,7 @@ branding:
   color: 'blue'
 inputs:
   ageGroup:
-    description: 'Age group of the build. This can be TEENS_AND_ADULTS, MIXED_AGES, or CHILDREN. (If not specified, the upload will go into “draft” status, rather than failing). For more information, see Age Group Self-Certification and Youth Requirements.'
+    description: 'Age group of the build. This can be TEENS_AND_ADULTS, MIXED_AGES, or CHILDREN. For more information, see Age Group Self-Certification and Youth Requirements.'
     required: true
   appId:
     description: 'Specifies the ID of your app. Obtained from the API tab of your app in the Oculus Dashboard.'
